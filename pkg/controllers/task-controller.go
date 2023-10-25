@@ -1,89 +1,90 @@
 package controllers
 
-import(
+import (
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
 	"net/http"
 	"strconv"
-	"github.com/kavikkannan/go-task/pkg/utils"
+
+	"github.com/gorilla/mux"
 	"github.com/kavikkannan/go-task/pkg/models"
+	"github.com/kavikkannan/go-task/pkg/utils"
 )
 
-var NewBook models.Book
+var NewUser models.User
 
-func GetBook(w http.ResponseWriter, r *http.Request){
-	newBooks:=models.GetAllBook()
-	res, _ :=json.Marshal(newBooks)
-	w.Header().Set("Content-Type","pkglication/json")
+func GetUser(w http.ResponseWriter, r *http.Request) {
+	newUsers := models.GetAllUser()
+	res, _ := json.Marshal(newUsers)
+	w.Header().Set("Content-Type", "pkglication/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 }
 
-func GetBookById(w http.ResponseWriter, r *http.Request){
+func GetUserById(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	bookId := vars["bookid"]
-	fmt.Println(bookId)
-	ID, err := strconv.ParseInt(bookId,0,0)
-	if err !=nil{
+	userId := vars["userid"]
+	fmt.Println(userId)
+	ID, err := strconv.ParseInt(userId, 0, 0)
+	if err != nil {
 		fmt.Println("error while parsinf")
 	}
-	bookDetails, _:= models.GetBookById(ID)
-	res, _ := json.Marshal(bookDetails)
-	w.Header().Set("Content-Type","pkglication/json")
+	userDetails, _ := models.GetUserById(ID)
+	res, _ := json.Marshal(userDetails)
+	w.Header().Set("Content-Type", "pkglication/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 }
 
-func CreateBook(w http.ResponseWriter, r *http.Request){
-	CreateBook := &models.Book{}
-	utils.ParseBody(r, CreateBook)
-	b:= CreateBook.CreateBook()
+func CreateUser(w http.ResponseWriter, r *http.Request) {
+	CreateUser := &models.User{}
+	utils.ParseBody(r, CreateUser)
+	b := CreateUser.CreateUser()
 	res, _ := json.Marshal(b)
-	w.Header().Set("Content-Type","pkglication/json")
+	w.Header().Set("Content-Type", "pkglication/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 }
 
-func DeleteBook(w http.ResponseWriter, r *http.Request){
+func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	bookId := vars["bookid"]
-	fmt.Println(bookId)
-	ID, err := strconv.ParseInt(bookId,0,0)
-	if err !=nil{
+	userId := vars["userid"]
+	fmt.Println(userId)
+	ID, err := strconv.ParseInt(userId, 0, 0)
+	if err != nil {
 		fmt.Println("error while parsinf")
 	}
-	book:=models.DeleteBook(ID)
-	res, _ := json.Marshal(book)
-	w.Header().Set("Content-Type","pkglication/json")
+	user := models.DeleteUser(ID)
+	res, _ := json.Marshal(user)
+	w.Header().Set("Content-Type", "pkglication/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 }
 
-func UpdateBook(w http.ResponseWriter, r *http.Request){
-	var updateBook = &models.Book{}
-	utils.ParseBody(r, updateBook)
+func UpdateUser(w http.ResponseWriter, r *http.Request) {
+	var updateUser = &models.User{}
+	utils.ParseBody(r, updateUser)
 	vars := mux.Vars(r)
-	bookId := vars["bookid"]
-	ID, err := strconv.ParseInt(bookId, 0, 0)
-	if err !=nil{
+	userId := vars["bookid"]
+	ID, err := strconv.ParseInt(userId, 0, 0)
+	if err != nil {
 		fmt.Println("error while parsing")
 	}
-	bookDetails, db:=models.GetBookById(ID)
-	if updateBook.Name != ""{
-		bookDetails.Name=updateBook.Name
+	userDetails, db := models.GetUserById(ID)
+	if updateUser.Name != "" {
+		userDetails.Name = updateUser.Name
 	}
 
-	if updateBook.Publication != ""{
-		bookDetails.Publication=updateBook.Publication
+	if updateUser.Publication != "" {
+		userDetails.Publication = updateUser.Publication
 	}
 
-	if updateBook.Author != ""{
-		bookDetails.Author=updateBook.Author
+	if updateUser.Author != "" {
+		userDetails.Author = updateUser.Author
 	}
-	db.Save(&bookDetails)
-	res, _ := json.Marshal(bookDetails)
-	w.Header().Set("Content-Type","pkglication/json")
+	db.Save(&userDetails)
+	res, _ := json.Marshal(userDetails)
+	w.Header().Set("Content-Type", "pkglication/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 }

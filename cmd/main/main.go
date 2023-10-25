@@ -11,7 +11,7 @@ import (
 
 func main() {
 	r := mux.NewRouter()
-	routes.RegisterBookStors(r)
+	routes.Registeruser(r)
 
 	// Create a CORS handler with your desired options.
 	c := cors.New(cors.Options{
