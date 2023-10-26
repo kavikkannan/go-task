@@ -21,19 +21,15 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
-func GetUserById(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	userId := vars["userid"]
-	fmt.Println(userId)
-	ID, err := strconv.ParseInt(userId, 0, 0)
-	if err != nil {
-		fmt.Println("error while parsinf")
-	}
-	userDetails, _ := models.GetUserById(ID)
-	res, _ := json.Marshal(userDetails)
-	w.Header().Set("Content-Type", "pkglication/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(res)
+func GetUserByEmail(w http.ResponseWriter, r *http.Request) {
+    vars := mux.Vars(r)
+    userEmail := vars["useremail"]
+    fmt.Println(userEmail)
+    userDetails, _ := models.GetUserByEmail(userEmail)
+    res, _ := json.Marshal(userDetails)
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusOK)
+    w.Write(res)
 }
 
 func CreateUser(w http.ResponseWriter, r *http.Request) {
@@ -62,29 +58,37 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
-	var updateUser = &models.User{}
-	utils.ParseBody(r, updateUser)
-	vars := mux.Vars(r)
-	userId := vars["bookid"]
-	ID, err := strconv.ParseInt(userId, 0, 0)
-	if err != nil {
-		fmt.Println("error while parsing")
-	}
-	userDetails, db := models.GetUserById(ID)
-	if updateUser.Name != "" {
-		userDetails.Name = updateUser.Name
-	}
+    var updateUser = &models.User{}
+    utils.ParseBody(r, updateUser)
+    vars := mux.Vars(r)
+    userEmail := vars["useremail"] // Update the route variable name
+    userDetails, db := models.GetUserByEmail(userEmail) // Update the function name
 
-	if updateUser.Publication != "" {
-		userDetails.Publication = updateUser.Publication
-	}
+    if userDetails != nil {
+        if updateUser.Project != "" {
+            userDetails.Project = updateUser.Project
+        }
 
-	if updateUser.Author != "" {
-		userDetails.Author = updateUser.Author
-	}
-	db.Save(&userDetails)
-	res, _ := json.Marshal(userDetails)
-	w.Header().Set("Content-Type", "pkglication/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(res)
+        if updateUser.Task != "" {
+            userDetails.Task = updateUser.Task
+        }
+
+        if updateUser.Email != "" {
+            userDetails.Email = updateUser.Email
+        }
+
+        if updateUser.Deadline != "" {
+            userDetails.Deadline = updateUser.Deadline
+        }
+
+        db.Save(&userDetails)
+        res, _ := json.Marshal(userDetails)
+        w.Header().Set("Content-Type", "application/json")
+        w.WriteHeader(http.StatusOK)
+        w.Write(res)
+    } else {
+        w.WriteHeader(http.StatusNotFound)
+        w.Write([]byte("User not found"))
+    }
 }
+

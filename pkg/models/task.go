@@ -9,9 +9,10 @@ var db *gorm.DB
 
 type User struct {
 	gorm.Model
-	Name        string `gorm:"" json:"name"`
-	Author      string `json:"author"`
-	Publication string `json:"publication"`
+	Project        string `gorm:"" json:"project"`
+	Email      string `json:"email"`
+	Task	 string `json:"task"`
+	Deadline	 string `json:"deadline"`
 }
 
 func init() {
@@ -32,12 +33,11 @@ func GetAllUser() []User {
 	return Users
 }
 
-func GetUserById(Id int64) (*User, *gorm.DB) {
-	var getUser User
-	db := db.Where("ID=?", Id).Find(&getUser)
-	return &getUser, db
+func GetUserByEmail(email string) (*User, *gorm.DB) {
+    var getUser User
+    db := db.Where("email = ?", email).Find(&getUser)
+    return &getUser, db
 }
-
 func DeleteUser(ID int64) User {
 	var user User
 	db.Where("ID=?", ID).Delete(user)
