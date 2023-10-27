@@ -7,8 +7,8 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
-	"github.com/kavikkannan/go-task/pkg/models"
-	"github.com/kavikkannan/go-task/pkg/utils"
+	"github.com/BalkanID-University/go-task/pkg/models"
+	"github.com/BalkanID-University/go-task/pkg/utils"
 )
 
 var NewUser models.User
@@ -20,12 +20,30 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 }
+func GetEmploye(w http.ResponseWriter, r *http.Request) {
+	newUsers := models.GetAllEmploye()
+	res, _ := json.Marshal(newUsers)
+	w.Header().Set("Content-Type", "pkglication/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(res)
+}
 
 func GetUserByEmail(w http.ResponseWriter, r *http.Request) {
     vars := mux.Vars(r)
     userEmail := vars["useremail"]
     fmt.Println(userEmail)
     userDetails, _ := models.GetUserByEmail(userEmail)
+    res, _ := json.Marshal(userDetails)
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusOK)
+    w.Write(res)
+}
+
+func GetEmployeByEmail(w http.ResponseWriter, r *http.Request) {
+    vars := mux.Vars(r)
+    userEmail := vars["useremail"]
+    fmt.Println(userEmail)
+    userDetails, _ := models.GetEmployeByEmail(userEmail)
     res, _ := json.Marshal(userDetails)
     w.Header().Set("Content-Type", "application/json")
     w.WriteHeader(http.StatusOK)
