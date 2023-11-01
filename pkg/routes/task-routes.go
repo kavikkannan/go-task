@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/gorilla/mux"
-	"github.com/BalkanID-University/go-task/pkg/controllers"
+	"github.com/kavikkannan/go-task/pkg/controllers"
 
 )
 

@@ -2,7 +2,7 @@ package models
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/BalkanID-University/go-task/pkg/config"
+	"github.com/kavikkannan/go-task/pkg/config"
 )
 
 var db *gorm.DB
@@ -20,8 +20,14 @@ type Login struct {
 	Email    string `json:"email" gorm:"unique"`
 	Position string  `json:"position"`
 	Password []byte `json:"-"`
-	Phonenumber string `json:"phonenumber"`
-	Address string `json:"address"`
+}
+
+type Grievances struct {
+	G_Id       uint   `json:"id"`
+	G_Type	string `json:"g_type"`
+	Description string `json:"description"`
+	Status    string `json:"status" `
+	Date string  `json:"date"`
 }
 
 func init() {
@@ -34,6 +40,12 @@ func (b *User) CreateUser() *User {
 	db.NewRecord(b)
 	db.Create(&b)
 	return b
+}
+
+func (c *Grievances) CreateGrievance() *Grievances {
+	db.NewRecord(c)
+	db.Create(&c)
+	return c
 }
 
 func GetAllUser() []User {

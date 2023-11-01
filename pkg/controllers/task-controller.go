@@ -7,8 +7,8 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
-	"github.com/BalkanID-University/go-task/pkg/models"
-	"github.com/BalkanID-University/go-task/pkg/utils"
+	"github.com/kavikkannan/go-task/pkg/models"
+	"github.com/kavikkannan/go-task/pkg/utils"
 )
 
 var NewUser models.User
@@ -54,6 +54,16 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	CreateUser := &models.User{}
 	utils.ParseBody(r, CreateUser)
 	b := CreateUser.CreateUser()
+	res, _ := json.Marshal(b)
+	w.Header().Set("Content-Type", "pkglication/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(res)
+}
+
+func CreateGrievances(w http.ResponseWriter, r *http.Request) {
+	CreateGrievances := &models.User{}
+	utils.ParseBody(r, CreateGrievances)
+	b := CreateGrievances.CreateGrievances()
 	res, _ := json.Marshal(b)
 	w.Header().Set("Content-Type", "pkglication/json")
 	w.WriteHeader(http.StatusOK)
