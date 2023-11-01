@@ -23,7 +23,8 @@ type Login struct {
 }
 
 type Grievances struct {
-	G_Id       uint   `json:"id"`
+	Id       uint   `json:"id"`
+	Email string `json:"email"`
 	G_Type	string `json:"g_type"`
 	Description string `json:"description"`
 	Status    string `json:"status" `
@@ -34,6 +35,7 @@ func init() {
 	config.Connect()
 	db = config.GetDB()
 	db.AutoMigrate(&User{})
+	db.AutoMigrate(&Grievances{})
 }
 
 func (b *User) CreateUser() *User {
@@ -42,7 +44,7 @@ func (b *User) CreateUser() *User {
 	return b
 }
 
-func (c *Grievances) CreateGrievance() *Grievances {
+func (c *Grievances) CreateGrievances() *Grievances {
 	db.NewRecord(c)
 	db.Create(&c)
 	return c
@@ -54,11 +56,29 @@ func GetAllUser() []User {
 	return Users
 }
 
+func GetAllGrievances() []Grievances {
+	var Users []Grievances
+	db.Find(&Users)
+	return Users
+}
+
 func GetAllEmploye() []Login {
 	var Users []Login
 	db.Find(&Users)
 	return Users
 }
+
+func GetAllEmployeByGrievances(userEmail string) ([]Grievances, error) {
+    var userDetails []Grievances
+
+    // Query the database using GORM to retrieve all rows associated with the given email
+    if err := db.Where("email = ?", userEmail).Find(&userDetails).Error; err != nil {
+        return nil, err
+    }
+
+    return userDetails, nil
+}
+
 
 func GetUserByEmail(email string) (*User, *gorm.DB) {
     var getUser User
@@ -72,8 +92,20 @@ func GetEmployeByEmail(email string) (*Login, *gorm.DB) {
     return &getUser, db
 }
 
+func GetEmployeByGrievance(ID int64) (*Grievances, *gorm.DB) {
+    var getUser Grievances
+    db := db.Where("ID=?", ID).Find(&getUser)
+    return &getUser, db
+}
+
 func DeleteUser(ID int64) User {
 	var user User
 	db.Where("ID=?", ID).Delete(user)
 	return user
 }
+func DeleteGrievances(ID int64) Grievances {
+	var user Grievances
+	db.Where("ID=?", ID).Delete(user)
+	return user
+}
+
